@@ -24,12 +24,12 @@ const SignIn = () => {
     <>
       <div className="pageContainer">
         <header>
-          <p className="pageHeader">Welcome Back</p>
+          <p className="pageHeader">Welcome Back!</p>
         </header>
         <main>
           <form>
             <input
-              type="emailInput"
+              type="email"
               placeholder="Email"
               id="email"
               value={email}
