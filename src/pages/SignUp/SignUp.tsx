@@ -1,5 +1,10 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import {
+  createUserWithEmailAndPassword,
+  updateProfile,
+} from "firebase/auth";
+import { db, auth } from "../../firebase.config";
 import { ReactComponent as ArrorRightIcon } from "../../assets/svg/keyboardArrowRightIcon.svg";
 import visiblityIcon from "../../assets/svg/visibilityIcon.svg";
 
@@ -15,10 +20,33 @@ const SignUp = () => {
   const navigate = useNavigate();
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData((prevState) =>({
+    setFormData((prevState) => ({
       ...prevState,
       [e.target.id]: e.target.value,
-    }))
+    }));
+  };
+
+  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    try {
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      const user = userCredential.user;
+      
+      if (auth.currentUser) {
+        updateProfile(auth.currentUser, {
+          displayName: name,
+        });
+      }
+
+      navigate("/");
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -28,7 +56,7 @@ const SignUp = () => {
           <p className="pageHeader">Welcome Back</p>
         </header>
         <main>
-          <form>
+          <form onSubmit={onSubmit}>
             <input
               type="text"
               placeholder="Name"
@@ -87,4 +115,3 @@ const SignUp = () => {
 };
 
 export default SignUp;
-
