@@ -1,10 +1,8 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import {
-  createUserWithEmailAndPassword,
-  updateProfile,
-} from "firebase/auth";
+import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { db, auth } from "../../firebase.config";
+import { setDoc, doc, serverTimestamp } from "firebase/firestore";
 import { ReactComponent as ArrorRightIcon } from "../../assets/svg/keyboardArrowRightIcon.svg";
 import visiblityIcon from "../../assets/svg/visibilityIcon.svg";
 
@@ -36,12 +34,23 @@ const SignUp = () => {
         password
       );
       const user = userCredential.user;
-      
+
       if (auth.currentUser) {
         updateProfile(auth.currentUser, {
           displayName: name,
         });
+
+        const { password, ...formWithoutPassword } = formData;
+        const formDataCopy = {
+          ...formWithoutPassword,
+          timestamp: serverTimestamp(),
+        };
+        await setDoc(doc(db, "users", user.uid), formDataCopy);
       }
+
+      // const formDataCopy = { passowrd, ...formData };
+      // delete formDataCopy.password;
+      // formDataCopy.timestamp = serverTimestamp();
 
       navigate("/");
     } catch (error) {
