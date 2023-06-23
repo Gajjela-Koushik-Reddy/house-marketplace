@@ -17,3 +17,4 @@ we can access the previous state of the component from the parameter of the func
     + We have set up inputs with respective ID's
     + whenever there is a change in the input, the previous state 
       is spread and new state is added.
+- Whenever the user enters wrong credientials, a banner pops up saying he had entered bad credentials.
